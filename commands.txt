@@ -1,0 +1,3 @@
+python odoo-bin -r admin -w admin --addons-path=addons,modules -d mydb
+inicializa base python odoo-bin -r admin -w admin --addons-path=addons,modules -d mydb -i base
+python odoo-bin -r admin -w admin --addons-path=addons,modules -d mydb -u real_estate
