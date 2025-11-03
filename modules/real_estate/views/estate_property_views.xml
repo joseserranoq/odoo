@@ -6,19 +6,14 @@
         <field name="view_mode">list,form</field>
     </record>
 
-    <!-- Para ensenar loos titulos de la aplicacion en UI-->
-    <menuitem id="real_estate_menu_root" name="Real Estate root">
-        <menuitem id="first_level_menu" name="Real Estate First Level">
-            <menuitem id="estate_property_menu_action" action="estate_property_action"></menuitem>
-        </menuitem>
-    </menuitem>
-
     <!-- Para poner el titulo a la tabla-->
     <record id="estate_property_tree_view" model="ir.ui.view">
         <field name="name">estate.property.tree</field>
         <field name="model">estate.property</field>
         <field name="arch" type="xml">
             <list>
+                <field name="tag_ids"></field>
+                <field name="property_type_id"></field>
                 <field name="name"></field>
                 <field name="postcode"></field>
                 <field name="bedrooms"></field>
@@ -36,17 +31,24 @@
         <field name="model">estate.property</field>
         <field name="arch" type="xml">
             <form name="Description">
+                <header>
+                    <button name="action_sold" type="object" string="Sold" icon="fa-check"></button>
+                    <button name="action_cancel" type="object" string="Cancel" icon="fa-ban"></button>
+                </header>
                 <sheet>
                     <h1 class="oe_title">
                         <field name="name"></field>
                     </h1>
                     <group>
+                        <field name="tag_ids" widget="many2many_tags"></field>
                         <group>
+                            <field name="property_type_id"></field>
                             <field name="postcode"></field>
                             <field name="date_availability"></field>
                         </group>
                         <group>
                             <field name="expected_price"></field>
+                            <field name="best_price"></field>
                             <field name="selling_price"></field>
                         </group>
                     </group>
@@ -63,6 +65,18 @@
                                 <field name="garden_orientation"></field>
                                 <field name="state"></field>
                                 <field name="active"></field>
+                                <field name="total_area"></field>
+                            </group>
+                        </page>
+                        <page string="Offers">
+                            <group>
+                                <field name="offer_ids"></field>
+                            </group>
+                        </page>
+                        <page string="Other Info">
+                            <group>
+                                <field name="user_id"></field>
+                                <field name="buyer_id"></field>
                             </group>
                         </page>
                     </notebook>
@@ -70,7 +84,7 @@
             </form>
         </field>
     </record>
-<!-- XML does not allow < and & to be used inside XML elements. 
+    <!-- XML does not allow < and & to be used inside XML elements. 
  To avoid parsing errors, entity references should be used: &lt; for < and &amp; 
  for &. Other entity references (&gt;, &apos; & &quot;) are optional.-->
     <record id="estate_property_search_view" model="ir.ui.view">
@@ -79,14 +93,17 @@
         <field name="arch" type="xml">
             <search string="Busqueda de propiedades">
                 <filter name="name" string="Property Name" />
+                <filter name="property_type_id" string="Property Type" />
                 <filter name="postcode" string="Postcode" />
-                <filter name="expected_price" string="Expected Price > 10" domain="[('expected_price','>',10)]"/>
+                <filter name="expected_price" string="Expected Price > 10"
+                    domain="[('expected_price','>',10)]" />
                 <!-- The logical operators & (AND), | (OR) and ! (NOT) 
                  can be used to explicitly combine criteria. They are used in prefix position 
                  (the operator is inserted before its arguments rather than between)-->
-                <filter name="state" string="Available properties" domain="['|',('state', '=','new'),('state','=','offer_received')]"/>
-                <separator/>
-                <filter name="group_by_postcode" string="Postcode" context="{'group_by':'postcode'}"/>
+                <filter name="state" string="Available properties"
+                    domain="['|',('state', '=','new'),('state','=','offer_received')]" />
+                <separator />
+                <filter name="group_by_postcode" string="Postcode" context="{'group_by':'postcode'}" />
             </search>
         </field>
     </record>
