@@ -43,19 +43,22 @@ class EstateProperty(models.Model):
     offer_ids = fields.One2many('estate.property.offer', 'property_id', string=' ')
     total_area = fields.Integer(string='Total Area (sqm)', compute='_compute_total_area')
     best_price = fields.Float(string='Best Offer', compute='_compute_best_price')
+    #Constraints in SQL
+    _check_expected_price = models.Constraint('expected_price >= 0', 'The expected price must be a positive number.')
+    _check_selling_price = models.Constraint('selling_price >= 0', 'The selling price must be a non-negative number.')
     
     #Constraints
     #TODO make the constraints in the db Chapter 10
-    @api.constrains('expected_price')
-    def _check_expected_price(self):
-        for record in self:
-            if record.expected_price < 0 :
-                raise exceptions.ValidationError("The expected price must be a positive number.")
-    @api.constrains('selling_price')
-    def _check_selling_price(self):
-        for record in self:
-            if record.selling_price < 0 :
-                raise exceptions.ValidationError("The selling price must be a non-negative number.")    
+    # @api.constrains('expected_price')
+    # def _check_expected_price(self):
+    #     for record in self:
+    #         if record.expected_price < 0 :
+    #             raise exceptions.ValidationError("The expected price must be a positive number.")
+    # @api.constrains('selling_price')
+    # def _check_selling_price(self):
+    #     for record in self:
+    #         if record.selling_price < 0 :
+    #             raise exceptions.ValidationError("The selling price must be a non-negative number.")    
     @api.constrains("selling_price","expected_price")
     def _check_selling_price_expected_price(self):
         for record in self:

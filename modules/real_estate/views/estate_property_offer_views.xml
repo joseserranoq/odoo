@@ -1,16 +1,4 @@
 <odoo>
-
-    <!-- <record id="estate_property_offer_tree_view" model="ir.ui.view">
-        <field name="name">estate.property.offer.tree</field>
-        <field name="model">estate.property.offer</field>
-        <field name="arch" type="xml">
-            <list>
-                <field name="price"></field>
-                <field name="partner_id"></field>
-                <field name="status"></field>
-            </list>
-        </field>
-    </record> -->
     <record id="estate_property_offer_form_view" model="ir.ui.view">
         <field name="name">estate.property.offer.form</field>
         <field name="model">estate.property.offer</field>
