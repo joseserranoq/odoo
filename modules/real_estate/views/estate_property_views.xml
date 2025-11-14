@@ -34,6 +34,7 @@
                 <header>
                     <button name="action_sold" type="object" string="Sold" icon="fa-check"></button>
                     <button name="action_cancel" type="object" string="Cancel" icon="fa-ban"></button>
+                    <field name="state" widget="statusbar" statusbar_visible="new,offer_received,offer_accepted,sold"/>
                 </header>
                 <sheet>
                     <h1 class="oe_title">
@@ -70,7 +71,10 @@
                         </page>
                         <page string="Offers">
                             <group>
-                                <field name="offer_ids"></field>
+                                <field name="offer_ids">
+
+                                </field>
+
                             </group>
                         </page>
                         <page string="Other Info">

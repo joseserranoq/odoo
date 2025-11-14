@@ -8,3 +8,5 @@ class EstatePropertyTag(models.Model):
     _sql_constraints = [
         ('name_unique', 'UNIQUE(name)', 'The tag name must be unique.')
     ]
+    # model ordering
+    _order = 'name asc'

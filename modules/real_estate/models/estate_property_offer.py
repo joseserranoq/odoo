@@ -18,12 +18,8 @@ class EstatePropertyOffer(models.Model):
 
     #SQL Constraints
     _check_price = models.Constraint("CHECK(price > 0)","The offer price must be a positive number.")
-    # @api.constrains("price")
-    # def _check_price_positive(self):
-    #     for record in self:
-    #         if record.price <= 0:
-    #             raise exceptions.ValidationError("The offer price must be a positive number.")
-
+    #model ordering
+    _order = 'price desc'
     @api.depends('create_date', 'validity')
     def _compute_date_deadline(self):
         for record in self:
@@ -55,3 +51,4 @@ class EstatePropertyOffer(models.Model):
         for record in self:
             record.status = 'refused'
         return True
+    

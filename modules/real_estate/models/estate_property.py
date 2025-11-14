@@ -17,7 +17,7 @@ class EstateProperty(models.Model):
     garden = fields.Boolean()
     garden_area = fields.Integer(string='Garden Area (sqm)')
     active = fields.Boolean(default=False)
-    state = fields.Selection(string='State',selection=[
+    state = fields.Selection(string='Status',selection=[
         ('new', 'New'),
         ('offer_received', 'Offer Received'),
         ('offer_accepted', 'Offer Accepted'),
@@ -31,6 +31,7 @@ class EstateProperty(models.Model):
         ('west', 'West')
     ])
     property_type_id = fields.Many2one('estate.property.type')
+    #property_type_id = fields.One2many('estate.property.type', 'property_ids', string='Property Type')
 # res.partner: a partner is a physical or legal entity. It can be a company, an individual or even a contact address.
 # res.partner: a partner is a physical or legal entity. 
 # It can be a company, an individual or even a contact address.
@@ -46,19 +47,11 @@ class EstateProperty(models.Model):
     #Constraints in SQL
     _check_expected_price = models.Constraint('expected_price >= 0', 'The expected price must be a positive number.')
     _check_selling_price = models.Constraint('selling_price >= 0', 'The selling price must be a non-negative number.')
-    
-    #Constraints
-    #TODO make the constraints in the db Chapter 10
-    # @api.constrains('expected_price')
-    # def _check_expected_price(self):
-    #     for record in self:
-    #         if record.expected_price < 0 :
-    #             raise exceptions.ValidationError("The expected price must be a positive number.")
-    # @api.constrains('selling_price')
-    # def _check_selling_price(self):
-    #     for record in self:
-    #         if record.selling_price < 0 :
-    #             raise exceptions.ValidationError("The selling price must be a non-negative number.")    
+   #Model ordering
+    _order = 'id desc' 
+
+
+    #Constraints 
     @api.constrains("selling_price","expected_price")
     def _check_selling_price_expected_price(self):
         for record in self:
