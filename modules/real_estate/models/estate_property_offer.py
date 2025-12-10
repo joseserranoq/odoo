@@ -15,7 +15,7 @@ class EstatePropertyOffer(models.Model):
     create_date = fields.Date(string='Offer Date', readonly=True, default=fields.Date.today())
     validity = fields.Integer(string='Validity (days)', default=7)
     date_deadline = fields.Date(string='Deadline', compute='_compute_date_deadline', inverse='_inverse_date_deadline', store=True, default=lambda self: fields.Date.add(fields.Date.today(), days=7))
-
+    property_type_id = fields.Many2one(related='property_id.property_type_id', string='Property Type', store=True)
     #SQL Constraints
     _check_price = models.Constraint("CHECK(price > 0)","The offer price must be a positive number.")
     #model ordering
@@ -51,4 +51,25 @@ class EstatePropertyOffer(models.Model):
         for record in self:
             record.status = 'refused'
         return True
+    # API model
+    @api.model
+    def create(self, vals):
+        # Call the super to create the offer
+        offer = super(EstatePropertyOffer, self).create(vals)
+        # Update the property state to 'offer_received' if it's currently 'new'
+        #self.env[model_name].browse(value)
+        property = offer.property_id
+        if property.state == 'new':
+            property.state = 'offer_received'
+        elif property.offer_ids:
+            best_offer = max(property.offer_ids.mapped('price'))
+            if offer.price < best_offer:
+                raise exceptions.ValidationError("The offer price must be higher than the existing offers.")
+        return offer
+    @api.model
+    def ondelete(self):
+        for record in self:
+            if record.status == 'accepted':
+                raise exceptions.UserError("Accepted offers cannot be deleted.")
+        return super(EstatePropertyOffer, self).ondelete()
     
